@@ -6,9 +6,9 @@ import { ChevronDown } from 'lucide-react'
 
 const NAME = 'YASSINE CHRITT'
 const ROLES = [
-  'AMOA Consultant',
-  'ERP Developer',
-  'Data Analyst',
+  'ERP Consultant',
+  'SAP S/4HANA & Odoo',
+  'AMOA Graduate',
   'Problem Solver',
 ]
 

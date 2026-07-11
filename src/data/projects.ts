@@ -17,14 +17,27 @@ export const projects: Project[] = [
   {
     id: 'nidaa',
     title: 'Nidaa',
-    subtitle: 'Online Blood Donation Platform',
+    subtitle: 'Smart Blood Donation Platform',
     description:
-      'A platform connecting patients, hospitals, and donors with automated alerts based on eligibility and proximity.',
+      'Web and mobile platform connecting donors with patients — AI matching, shortage prediction, and stock transfer between hospitals.',
     longDescription:
-      'Built a comprehensive blood donation platform that connects patients, hospitals, and donors. Features automated alerts based on eligibility and proximity, intelligent donor matching, and real-time notifications. Won 2nd Prize at the ESPOIR Social Innovation Competition (INPT).',
-    tech: ['React', 'Node.js', 'AI', 'Firebase'],
+      'Web and mobile platform connecting blood donors with patients in need. Two AI models: one to identify the best eligible donors for each request, another to predict blood shortages. Includes a transfer algorithm to redistribute excess stock between hospitals and blood banks. 2nd Prize — ESPOIR Social Innovation Competition (INPT) 2025. 3rd Place Worldwide — Huawei ICT Competition Innovation Track (2026), after winning national rounds in Morocco and competing at the Global Finals in China.',
+    tech: ['React', 'Node.js', 'AI', 'Mobile', 'Firebase'],
     category: 'web',
-    image: '/images/projects/nidaa.png',
+    image: '/images/projects/nidaa.svg',
+    featured: true,
+  },
+  {
+    id: 'sovereign',
+    title: 'SOVEREIGN',
+    subtitle: 'Life-RPG Mobile App',
+    description:
+      'Cross-platform app that gamifies personal development through habits, quests, and character progression.',
+    longDescription:
+      'Cross-platform mobile app (React Native, TypeScript) that gamifies personal development through habits, quests, and character progression, featuring original custom artwork and a polished, immersive user experience.',
+    tech: ['React Native', 'TypeScript', 'Expo'],
+    category: 'mobile',
+    image: '/images/projects/sovereign.svg',
     featured: true,
   },
   {
@@ -51,16 +64,15 @@ export const projects: Project[] = [
     tech: ['React Native', 'Expo', 'NativeWind', 'TypeScript'],
     category: 'mobile',
     image: '/images/projects/qurangarden.svg',
-    featured: true,
   },
   {
     id: 'tomobilti',
     title: 'Tomobilti',
     subtitle: 'ML Car Price Predictor',
     description:
-      'Accurately evaluates used Moroccan car prices using an ML model trained on scraped data from multiple websites.',
+      'Scraped Moroccan car listings, trained an ML model for price prediction, and built a responsive web app to explore results.',
     longDescription:
-      'A website that accurately evaluates the price of a used Moroccan car. Uses an ML model trained on pre-existing data scraped from multiple Moroccan websites. Features a responsive web interface for easy price prediction.',
+      'Scraped and consolidated listings from multiple Moroccan car sales websites, trained a machine learning model for price prediction, and built a responsive web app to explore and visualize results.',
     tech: ['Python', 'scikit-learn', 'Flask', 'Web Scraping'],
     category: 'ai',
     image: '/images/projects/tomobilti.svg',

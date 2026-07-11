@@ -8,31 +8,34 @@ gsap.registerPlugin(ScrollTrigger)
 const stats = [
   {
     icon: <Trophy size={24} />,
-    value: '3rd',
-    label: 'Place Worldwide',
+    value: '2×',
+    label: '3rd Worldwide',
     suffix: '',
-    hoverInfo: "3rd in Huawei's ICT Cloud Track Competition — Global Final in China",
+    hoverInfo:
+      'Huawei ICT Global Finals in China — 3rd Place Cloud Track (2025) and 3rd Place Innovation Track (2026)',
   },
   {
     icon: <Briefcase size={24} />,
     value: '3',
     label: 'Years Experience',
     suffix: '+',
-    hoverInfo: 'ERP development, data analytics, web development & freelance automation since 2023',
+    hoverInfo:
+      'Odoo production ERP, SAP S/4HANA, data analytics, and web development since 2023',
   },
   {
     icon: <GraduationCap size={24} />,
     value: 'INPT',
-    label: 'Engineering School',
+    label: 'Engineering Graduate',
     suffix: '',
-    hoverInfo: 'AMOA Program — Digital Transformation & IT Consulting at Institut National des Postes et Télécommunications, Rabat',
+    hoverInfo:
+      'Engineering Degree in AMOA (Assistance à la Maîtrise d’Ouvrage) — graduated July 2026, INPT Rabat',
   },
   {
     icon: <Globe size={24} />,
     value: '3',
     label: 'Languages Spoken',
     suffix: '',
-    hoverInfo: 'Arabic — Fluent | English — C2 (TOEIC) | French — Intermediate',
+    hoverInfo: 'Arabic — Native | English — C2 (TOEIC) | French — Professional',
   },
 ]
 
@@ -141,37 +144,35 @@ export default function About() {
           {/* Content */}
           <div ref={contentRef} className="space-y-6">
             <p className="reveal-text text-white/70 text-lg leading-relaxed">
-              I'm an{' '}
-              <span className="text-accent font-medium">
-                AMOA student at INPT
-              </span>{' '}
-              with hands-on experience in ERP systems (SAP &amp; Odoo),
-              automation tools, and data analytics.
+              AMOA graduate from{' '}
+              <span className="text-accent font-medium">INPT</span>, I work as
+              an ERP consultant with production experience in{' '}
+              <span className="text-accent font-medium">Odoo</span> and{' '}
+              <span className="text-accent font-medium">SAP S/4HANA</span>{' '}
+              (SD, MM, FI) — from process analysis and implementation to rollout.
             </p>
             <p className="reveal-text text-white/70 text-lg leading-relaxed">
-              I participated in multiple national and international
-              competitions, including the{' '}
+              Twice represented Morocco at the{' '}
               <span className="text-accent font-medium">
-                Huawei ICT Global Final in China
+                Huawei ICT Global Finals in China
               </span>
-              , where our team won{' '}
+              , earning{' '}
               <span className="text-accent font-medium">
                 3rd place worldwide
-              </span>
-              .
+              </span>{' '}
+              on the Cloud Track (2025) and Innovation Track (2026).
             </p>
             <p className="reveal-text text-white/70 text-lg leading-relaxed">
-              My expertise spans digital transformation consulting, ERP
-              implementation, process automation, data analytics, and
-              full-stack web development. I'm passionate about bridging
-              business needs with technology solutions.
+              I focus on digitizing business processes, building reliable ERP
+              solutions, and connecting operational needs with the right
+              technology.
             </p>
 
             {/* Quick Info */}
             <div className="reveal-text grid grid-cols-2 gap-4 pt-4">
               {[
                 { label: 'Location', value: 'Casablanca, Morocco' },
-                { label: 'Education', value: 'INPT — AMOA' },
+                { label: 'Education', value: 'INPT — AMOA Graduate' },
                 {
                   label: 'Email',
                   value: 'chrittyassine@gmail.com',

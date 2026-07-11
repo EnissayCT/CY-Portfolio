@@ -16,13 +16,16 @@ const typeColors = {
 
 export default function ExperienceCard({
   experience,
+  stacked = false,
 }: {
   experience: Experience
+  stacked?: boolean
 }) {
   const cardRef = useRef<HTMLDivElement>(null)
   const [tilt, setTilt] = useState({ x: 0, y: 0 })
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (stacked) return
     if (!cardRef.current) return
     const rect = cardRef.current.getBoundingClientRect()
     const x = (e.clientX - rect.left) / rect.width - 0.5
@@ -37,7 +40,11 @@ export default function ExperienceCard({
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`glass-card p-8 min-w-[320px] md:min-w-[400px] max-w-[450px] flex-shrink-0 cursor-default border-l-2 ${typeColors[experience.type]} hover:bg-white/[0.08] transition-colors duration-300`}
+      className={`glass-card flex-shrink-0 cursor-default border-l-2 p-6 sm:p-8 ${typeColors[experience.type]} transition-colors duration-300 hover:bg-white/[0.08] ${
+        stacked
+          ? 'w-full max-w-none min-w-0'
+          : 'min-w-[320px] max-w-[450px] md:min-w-[400px]'
+      }`}
       style={{
         transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
         transition: 'transform 0.3s ease-out',

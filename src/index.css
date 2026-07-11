@@ -19,6 +19,14 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  @media (max-width: 767px) {
+    html,
+    body {
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
+  }
+
   ::selection {
     @apply bg-accent/30 text-accent-light;
   }
@@ -87,18 +95,131 @@
   }
 }
 
-/* Noise overlay */
+/* Hero background — CSS + SVG only, no WebGL */
+.hero-dot-grid {
+  background-image: radial-gradient(rgba(18, 214, 64, 0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, black 20%, transparent 75%);
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.hero-orb-a {
+  top: -10%;
+  left: 15%;
+  width: min(55vw, 520px);
+  height: min(55vw, 520px);
+  background: radial-gradient(circle, rgba(18, 214, 64, 0.14) 0%, transparent 70%);
+  filter: blur(40px);
+  animation: heroOrbA 22s ease-in-out infinite;
+}
+
+.hero-orb-b {
+  bottom: -5%;
+  right: 10%;
+  width: min(45vw, 420px);
+  height: min(45vw, 420px);
+  background: radial-gradient(circle, rgba(10, 37, 64, 0.9) 0%, transparent 70%);
+  filter: blur(50px);
+  animation: heroOrbB 28s ease-in-out infinite;
+}
+
+.hero-flow-svg {
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.hero-lane {
+  stroke: rgba(18, 214, 64, 0.08);
+  stroke-width: 1;
+  stroke-dasharray: 6 10;
+}
+
+.hero-flow-path {
+  stroke-width: 1.5;
+  stroke-dasharray: 10 8;
+  animation: heroFlow 24s linear infinite;
+}
+
+.hero-flow-path-delayed {
+  animation-delay: -8s;
+}
+
+.hero-flow-path-vertical {
+  stroke-opacity: 0.35;
+  stroke-dasharray: 6 8;
+  animation-duration: 18s;
+}
+
+.hero-node-ring {
+  fill: none;
+  stroke: rgba(18, 214, 64, 0.25);
+  stroke-width: 1;
+}
+
+.hero-node-core {
+  fill: rgba(18, 214, 64, 0.45);
+}
+
+@media (max-width: 768px) {
+  .hero-flow-svg {
+    opacity: 0.14;
+  }
+
+  .hero-orb-a,
+  .hero-orb-b {
+    filter: blur(30px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb-a,
+  .hero-orb-b,
+  .hero-flow-path {
+    animation: none;
+  }
+}
+
+@keyframes heroOrbA {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(4%, -3%) scale(1.06);
+  }
+}
+
+@keyframes heroOrbB {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-3%, 4%) scale(1.04);
+  }
+}
+
+@keyframes heroFlow {
+  to {
+    stroke-dashoffset: -120;
+  }
+}
+
+/* Noise overlay — static only; animated feTurbulence kills Chrome GPU */
 .noise-overlay {
   position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  inset: 0;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  animation: grain 8s steps(10) infinite;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
 }
 
 /* Fade in up animation for initial elements */

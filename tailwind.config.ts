@@ -29,8 +29,22 @@ export default {
         'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
         grain: 'grain 8s steps(10) infinite',
         'nudge-right': 'nudgeRight 1.5s ease-in-out infinite',
+        'hero-orb-a': 'heroOrbA 22s ease-in-out infinite',
+        'hero-orb-b': 'heroOrbB 28s ease-in-out infinite',
+        'hero-flow': 'heroFlow 24s linear infinite',
       },
       keyframes: {
+        heroOrbA: {
+          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+          '50%': { transform: 'translate(4%, -3%) scale(1.06)' },
+        },
+        heroOrbB: {
+          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+          '50%': { transform: 'translate(-3%, 4%) scale(1.04)' },
+        },
+        heroFlow: {
+          to: { strokeDashoffset: '-120' },
+        },
         nudgeRight: {
           '0%, 100%': { transform: 'translateX(0)', opacity: '0.5' },
           '50%': { transform: 'translateX(8px)', opacity: '1' },

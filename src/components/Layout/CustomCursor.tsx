@@ -3,20 +3,18 @@ import { useEffect, useRef, useState } from 'react'
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null)
   const dotRef = useRef<HTMLDivElement>(null)
-  const [isHovering, setIsHovering] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
-  const [isTouchDevice, setIsTouchDevice] = useState(false)
-
-  useEffect(() => {
-    const isTouch =
+  const isHoveringRef = useRef(false)
+  const isVisibleRef = useRef(false)
+  const [isTouchDevice] = useState(
+    () =>
       'ontouchstart' in window ||
       navigator.maxTouchPoints > 0 ||
       window.matchMedia('(pointer: coarse)').matches ||
-      window.matchMedia('(hover: none)').matches
-    if (isTouch) {
-      setIsTouchDevice(true)
-      return
-    }
+      window.matchMedia('(hover: none)').matches,
+  )
+
+  useEffect(() => {
+    if (isTouchDevice) return
 
     const pos = {
       mouseX: 0,
@@ -27,30 +25,51 @@ export default function CustomCursor() {
       dotY: 0,
     }
 
+    const applyHoverStyle = (hovering: boolean) => {
+      const cursor = cursorRef.current
+      if (!cursor || hovering === isHoveringRef.current) return
+      isHoveringRef.current = hovering
+      cursor.classList.toggle('w-16', hovering)
+      cursor.classList.toggle('h-16', hovering)
+      cursor.classList.toggle('border-accent', hovering)
+      cursor.classList.toggle('bg-accent/10', hovering)
+      cursor.classList.toggle('w-10', !hovering)
+      cursor.classList.toggle('h-10', !hovering)
+      cursor.classList.toggle('border-accent/50', !hovering)
+    }
+
+    const applyVisible = (visible: boolean) => {
+      const cursor = cursorRef.current
+      const dot = dotRef.current
+      if (!cursor || !dot || visible === isVisibleRef.current) return
+      isVisibleRef.current = visible
+      cursor.classList.toggle('opacity-100', visible)
+      cursor.classList.toggle('opacity-0', !visible)
+      dot.classList.toggle('opacity-100', visible)
+      dot.classList.toggle('opacity-0', !visible)
+    }
+
     const handleMouseMove = (e: MouseEvent) => {
       pos.mouseX = e.clientX
       pos.mouseY = e.clientY
-      setIsVisible(true)
-    }
+      applyVisible(true)
 
-    const handleElementHover = (e: MouseEvent) => {
       const target = e.target as HTMLElement
-      setIsHovering(
+      applyHoverStyle(
         !!target.closest(
           'a, button, [data-cursor-hover], input, textarea, select',
         ),
       )
     }
 
-    const handleMouseLeave = () => setIsVisible(false)
-    const handleMouseEnter = () => setIsVisible(true)
+    const handleMouseLeave = () => applyVisible(false)
+    const handleMouseEnter = () => applyVisible(true)
 
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mousemove', handleElementHover)
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
     document.documentElement.addEventListener('mouseleave', handleMouseLeave)
     document.documentElement.addEventListener('mouseenter', handleMouseEnter)
 
-    let rafId: number
+    let rafId = 0
 
     const animate = () => {
       pos.cursorX += (pos.mouseX - pos.cursorX) * 0.15
@@ -58,13 +77,13 @@ export default function CustomCursor() {
       pos.dotX += (pos.mouseX - pos.dotX) * 0.6
       pos.dotY += (pos.mouseY - pos.dotY) * 0.6
 
-      if (cursorRef.current) {
-        cursorRef.current.style.left = `${pos.cursorX}px`
-        cursorRef.current.style.top = `${pos.cursorY}px`
+      const cursor = cursorRef.current
+      const dot = dotRef.current
+      if (cursor) {
+        cursor.style.transform = `translate(${pos.cursorX}px, ${pos.cursorY}px) translate(-50%, -50%)`
       }
-      if (dotRef.current) {
-        dotRef.current.style.left = `${pos.dotX}px`
-        dotRef.current.style.top = `${pos.dotY}px`
+      if (dot) {
+        dot.style.transform = `translate(${pos.dotX}px, ${pos.dotY}px) translate(-50%, -50%)`
       }
 
       rafId = requestAnimationFrame(animate)
@@ -74,18 +93,11 @@ export default function CustomCursor() {
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('mousemove', handleElementHover)
-      document.documentElement.removeEventListener(
-        'mouseleave',
-        handleMouseLeave,
-      )
-      document.documentElement.removeEventListener(
-        'mouseenter',
-        handleMouseEnter,
-      )
+      document.documentElement.removeEventListener('mouseleave', handleMouseLeave)
+      document.documentElement.removeEventListener('mouseenter', handleMouseEnter)
       cancelAnimationFrame(rafId)
     }
-  }, [])
+  }, [isTouchDevice])
 
   if (isTouchDevice) return null
 
@@ -93,17 +105,11 @@ export default function CustomCursor() {
     <>
       <div
         ref={cursorRef}
-        className={`fixed -translate-x-1/2 -translate-y-1/2 rounded-full border pointer-events-none z-[99999] transition-[width,height,border-color,background-color] duration-300 ease-out ${
-          isHovering
-            ? 'w-16 h-16 border-accent bg-accent/10'
-            : 'w-10 h-10 border-accent/50'
-        } ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+        className="pointer-events-none fixed left-0 top-0 z-[99999] hidden h-10 w-10 rounded-full border border-accent/50 opacity-0 transition-[width,height,border-color,background-color] duration-300 ease-out will-change-transform md:block"
       />
       <div
         ref={dotRef}
-        className={`fixed -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-accent pointer-events-none z-[99999] transition-opacity duration-300 ${
-          isVisible ? 'opacity-100' : 'opacity-0'
-        }`}
+        className="pointer-events-none fixed left-0 top-0 z-[99999] hidden h-2 w-2 rounded-full bg-accent opacity-0 transition-opacity duration-300 will-change-transform md:block"
       />
     </>
   )
