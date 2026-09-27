@@ -8,6 +8,7 @@ export interface Project {
   category: 'web' | 'mobile' | 'ai'
   image: string
   images?: string[]
+  layout?: 'default' | 'portrait-showcase'
   github?: string
   live?: string
   featured?: boolean
@@ -21,10 +22,16 @@ export const projects: Project[] = [
     description:
       'A platform connecting patients, hospitals, and donors with automated alerts based on eligibility and proximity.',
     longDescription:
-      'Built a comprehensive blood donation platform that connects patients, hospitals, and donors. Features automated alerts based on eligibility and proximity, intelligent donor matching, and real-time notifications. Won 2nd Prize at the ESPOIR Social Innovation Competition (INPT).',
+      'Built a comprehensive blood donation platform that connects patients, hospitals, and donors. Features automated alerts based on eligibility and proximity, intelligent donor matching, and real-time notifications. Won 1st Prize at Huawei ICT global competition, 2nd Prize at the ESPOIR Social Innovation Competition (INPT), and secured a temporary incubation spot at the ADD.',
     tech: ['React', 'Node.js', 'AI', 'Firebase'],
     category: 'web',
     image: '/images/projects/nidaa.png',
+    images: [
+      '/images/projects/nidaa-1.png',
+      '/images/projects/nidaa-2.png',
+      '/images/projects/nidaa-3.png',
+      '/images/projects/nidaa-4.png',
+    ],
     featured: true,
   },
   {
@@ -51,7 +58,51 @@ export const projects: Project[] = [
     tech: ['React Native', 'Expo', 'NativeWind', 'TypeScript'],
     category: 'mobile',
     image: '/images/projects/qurangarden.svg',
+    layout: 'portrait-showcase',
     featured: true,
+  },
+  {
+    id: 'sovereign',
+    title: 'SOVEREIGN',
+    subtitle: 'Self-Mastery RPG Habit Tracker',
+    description:
+      'A gamified personal growth app that turns real-life actions, quests, and streaks into character progression through domains, stats, and a living skill tree.',
+    longDescription:
+      'SOVEREIGN is a mobile self-improvement RPG designed to make discipline feel tangible. Real-world actions are logged as deeds across domains like mind, body, soul, wealth, relationships, and craft, then converted into XP, stat growth, streaks, quests, relics, and unlockable skill-tree progression. The app includes onboarding, class-based character identity, mentor guidance, journal and quest systems, shareable character sheets, haptics, sound design, and a polished fantasy-inspired presentation that makes habit building feel like playing a meaningful long-term campaign.',
+    tech: ['React Native', 'Expo Router', 'TypeScript', 'Zustand', 'Reanimated'],
+    category: 'mobile',
+    image: '/images/projects/Sovereign.png',
+    images: [
+      '/images/projects/Sovereign (6).jpeg',
+      '/images/projects/Sovereign (1).jpeg',
+      '/images/projects/Sovereign (2).jpeg',
+      '/images/projects/Sovereign (3).jpeg',
+      '/images/projects/Sovereign (4).jpeg',
+      '/images/projects/Sovereign (5).jpeg',
+      
+    ],
+    featured: true,
+  },
+  {
+    id: 'farmmanager',
+    title: 'FarmManager',
+    subtitle: 'Livestock Operations Management App',
+    description:
+      'A mobile farm operations app for managing animals, feeding, breeding, medical care, production, finance, tasks, and exports from a single dashboard.',
+    longDescription:
+      'FarmManager is a practical livestock management app built for day-to-day farm operations. It centralizes herd records, breeding workflows, feed stock tracking, medical history, vaccinations, production logs, expenses, tasks, notes, and calendar planning inside a structured mobile interface. The app also supports multilingual usage, local persistence with SQLite, dashboard analytics, CSV/JSON export, and utility flows like bulk animal entry and customizable settings lists, making it useful both as an operational tracker and as a lightweight farm back-office tool on mobile.',
+    tech: ['React Native', 'Expo', 'TypeScript', 'SQLite', 'React Navigation'],
+    category: 'mobile',
+    image: '/images/projects/FarmManager.png',
+    images: [
+      '/images/projects/FarmManager (1).jpeg',
+      '/images/projects/FarmManager (2).jpeg',
+      '/images/projects/FarmManager (3).jpeg',
+      '/images/projects/FarmManager (4).jpeg',
+      '/images/projects/FarmManager (5).jpeg',
+      '/images/projects/FarmManager (6).jpeg',
+      '/images/projects/FarmManager (7).jpeg',
+    ],
   },
   {
     id: 'tomobilti',

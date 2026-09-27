@@ -44,6 +44,22 @@ export default function About() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Section entry — fade in
+      gsap.fromTo(
+        sectionRef.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 90%',
+          },
+        },
+      )
+
       // Image entrance
       gsap.fromTo(
         imageRef.current,
@@ -111,7 +127,7 @@ export default function About() {
     <section
       id="about"
       ref={sectionRef}
-      className="section-padding relative overflow-hidden"
+      className="section-padding !pb-4 relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
@@ -130,12 +146,12 @@ export default function About() {
               <img
                 src="/images/mee.jpg"
                 alt="Yassine CHRITT"
-                className="w-full aspect-[3/4] object-cover object-top rounded-2xl group-hover:scale-105 transition-transform duration-700"
+                className="w-full aspect-[3/4] object-cover object-top rounded-2xl group-hover:scale-[1.03] transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-accent/10 group-hover:bg-transparent transition-colors duration-500 rounded-2xl" />
+              <div className="absolute inset-0 bg-accent/8 group-hover:bg-transparent transition-colors duration-500 rounded-2xl" />
             </div>
-            {/* Decorative border */}
-            <div className="absolute -bottom-4 -right-4 w-full h-full border-2 border-accent/20 rounded-2xl -z-10" />
+            {/* Subtle corner accent */}
+            <div className="absolute -bottom-3 -right-3 w-full h-full border border-accent/15 rounded-2xl -z-10" />
           </div>
 
           {/* Content */}
@@ -194,14 +210,14 @@ export default function About() {
         {/* Stats */}
         <div
           ref={statsRef}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20"
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12"
         >
           {stats.map((stat) => (
             <div
               key={stat.label}
               className="stat-card glass-card p-6 text-center hover:glow-border transition-all duration-300 group relative"
             >
-              <div className="text-accent mb-3 flex justify-center group-hover:scale-110 transition-transform">
+              <div className="text-accent mb-3 flex justify-center group-hover:scale-110 transition-transform duration-300">
                 {stat.icon}
               </div>
               <div className="text-3xl font-display font-bold text-white">
@@ -209,11 +225,13 @@ export default function About() {
                 <span className="text-accent">{stat.suffix}</span>
               </div>
               <p className="text-white/50 text-sm mt-1">{stat.label}</p>
-              {/* Hover info overlay */}
-              <div className="absolute inset-0 rounded-2xl bg-navy-800/95 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+
+              {/* Tooltip on hover */}
+              <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-3 w-64 px-4 py-3 rounded-xl bg-navy-800/95 backdrop-blur-md border border-white/10 shadow-lg opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 z-20">
                 <p className="text-white/80 text-xs leading-relaxed text-center">
                   {stat.hoverInfo}
                 </p>
+                <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-[6px] border-x-transparent border-t-[6px] border-t-navy-800/95" />
               </div>
             </div>
           ))}

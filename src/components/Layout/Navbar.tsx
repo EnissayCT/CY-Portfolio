@@ -53,10 +53,21 @@ export default function Navbar() {
     <header
       className={`fixed top-0 w-full z-[1000] transition-all duration-500 ${
         isScrolled
-          ? 'py-3 bg-navy-900/80 backdrop-blur-xl border-b border-white/5'
+          ? 'py-3 bg-navy-900/90 backdrop-blur-md border-b border-white/5'
           : 'py-6 bg-transparent'
       }`}
     >
+      {/* Shimmer gradient when scrolled */}
+      {isScrolled && (
+        <div
+          className="absolute inset-0 pointer-events-none overflow-hidden"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(79,195,247,0.03) 25%, transparent 50%, rgba(79,195,247,0.03) 75%, transparent 100%)',
+            backgroundSize: '200% 100%',
+            animation: 'navShimmer 8s ease-in-out infinite',
+          }}
+        />
+      )}
       <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <a
@@ -89,11 +100,22 @@ export default function Navbar() {
                 data-cursor-hover
               >
                 {link.label}
-                <span
-                  className={`absolute -bottom-1 left-0 h-[2px] bg-accent transition-all duration-300 ${
-                    activeSection === link.href.slice(1) ? 'w-full' : 'w-0'
+                {/* Wave underline */}
+                <svg
+                  className={`absolute -bottom-1 left-0 w-full h-[4px] transition-opacity duration-300 ${
+                    activeSection === link.href.slice(1) ? 'opacity-100' : 'opacity-0'
                   }`}
-                />
+                  viewBox="0 0 100 4"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    d="M0 2 Q 10 0, 20 2 T 40 2 T 60 2 T 80 2 T 100 2"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    className="text-accent"
+                  />
+                </svg>
               </a>
             </li>
           ))}
@@ -103,7 +125,7 @@ export default function Navbar() {
         <a
           href="/resume.pdf"
           download="Yassine_CHRITT_Resume.pdf"
-          className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-accent border border-accent/30 rounded-lg hover:bg-accent/10 transition-all"
+          className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-accent border border-accent/30 rounded-lg hover:bg-accent/10 hover:border-accent/50 transition-all duration-300"
           data-cursor-hover
         >
           Resume

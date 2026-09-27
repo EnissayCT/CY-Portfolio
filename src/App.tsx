@@ -6,6 +6,9 @@ import ScrollProgress from './components/Layout/ScrollProgress'
 import NoiseOverlay from './components/Layout/NoiseOverlay'
 import SmoothScroll from './components/Layout/SmoothScroll'
 import Hero from './components/Hero/Hero'
+import WaveDivider from './components/Layout/WaveDivider'
+import { startTimeOfDay, stopTimeOfDay } from './utils/timeOfDay'
+import { prefersReducedMotion } from './utils/perfBudget'
 
 const About = lazy(() => import('./components/About/About'))
 const Experience = lazy(() => import('./components/Experience/Experience'))
@@ -19,8 +22,29 @@ function App() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2800)
+    const timer = setTimeout(() => setIsLoading(false), 1650)
     return () => clearTimeout(timer)
+  }, [])
+
+  // Time-of-day color cycling
+  useEffect(() => {
+    if (prefersReducedMotion) return
+    startTimeOfDay()
+    return () => stopTimeOfDay()
+  }, [])
+
+  // Tab title easter egg
+  useEffect(() => {
+    const originalTitle = document.title
+    const handleVisibility = () => {
+      if (document.hidden) {
+        document.title = 'Come back — let\'s build something great'
+      } else {
+        document.title = originalTitle
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibility)
+    return () => document.removeEventListener('visibilitychange', handleVisibility)
   }, [])
 
   return (
@@ -33,6 +57,7 @@ function App() {
         <Navbar />
         <main>
           <Hero />
+          <WaveDivider />
           <Suspense fallback={null}>
             <About />
             <Experience />

@@ -8,10 +8,9 @@ import ExperienceCard from './ExperienceCard'
 gsap.registerPlugin(ScrollTrigger)
 
 export default function Experience() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const triggerRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
-  const mobileScrollRef = useRef<HTMLDivElement>(null)
+  const ctxRef = useRef<gsap.Context | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [hasScrolled, setHasScrolled] = useState(false)
 
@@ -23,32 +22,52 @@ export default function Experience() {
   }, [])
 
   useEffect(() => {
-    if (isMobile || !scrollRef.current || !triggerRef.current) return
+    if (isMobile || !scrollRef.current || !sectionRef.current) return
 
-    const ctx = gsap.context(() => {
-      const scrollWidth =
-        scrollRef.current!.scrollWidth - window.innerWidth + 100
+    // Double-rAF ensures layout/paint is fully settled before measuring
+    const rafId = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!scrollRef.current || !sectionRef.current) return
 
-      gsap.to(scrollRef.current, {
-        x: -scrollWidth,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: triggerRef.current,
-          start: 'top top',
-          end: () => `+=${scrollWidth}`,
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
+        // 20% inset on each side so first/last card are centered in the viewport
+        const inset = window.innerWidth * 0.2
+        const scrollWidth = scrollRef.current.scrollWidth
+        const scrollDistance = scrollWidth - window.innerWidth + inset * 2
+
+        if (scrollDistance <= 0) return
+
+        // Start offset: shift cards right so the first card sits at 20% from left
+        gsap.set(scrollRef.current, { x: inset })
+
+        const ctx = gsap.context(() => {
+          gsap.to(scrollRef.current, {
+            x: -(scrollDistance - inset),
+            ease: 'none',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top top',
+              end: () => `+=${scrollDistance}`,
+              scrub: 1,
+              pin: true,
+              anticipatePin: 1,
+              pinSpacing: true,
+              invalidateOnRefresh: true,
+            },
+          })
+        }, sectionRef)
+
+        ctxRef.current = ctx
       })
-    }, sectionRef)
+    })
 
-    return () => ctx.revert()
+    return () => {
+      cancelAnimationFrame(rafId)
+      ctxRef.current?.revert()
+    }
   }, [isMobile])
 
   return (
-    <section id="experience" ref={sectionRef} className="relative">
+    <section id="experience" className="relative">
       {isMobile ? (
         /* Mobile: Horizontal Scroll */
         <div className="section-padding overflow-hidden">
@@ -62,7 +81,6 @@ export default function Experience() {
             </div>
             <div className="relative">
               <div
-                ref={mobileScrollRef}
                 onScroll={() => { if (!hasScrolled) setHasScrolled(true) }}
                 className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-2 px-2 scrollbar-hide"
               >
@@ -85,9 +103,9 @@ export default function Experience() {
           </div>
         </div>
       ) : (
-        /* Desktop: Horizontal Scroll */
-        <div ref={triggerRef} className="min-h-screen flex flex-col justify-center overflow-hidden">
-          <div className="px-6 md:px-12 lg:px-24 mb-12">
+        /* Desktop: Horizontal Scroll — sectionRef is the pin target */
+        <div ref={sectionRef} className="h-screen flex flex-col justify-center overflow-hidden">
+          <div className="px-6 md:px-12 lg:px-24 mb-8">
             <div className="flex items-center gap-4 max-w-7xl mx-auto">
               <span className="text-accent font-mono text-sm">02.</span>
               <h2 className="text-3xl md:text-4xl font-display font-bold text-white">
@@ -95,7 +113,7 @@ export default function Experience() {
               </h2>
               <div className="flex-1 h-px bg-white/10 ml-4" />
             </div>
-            <p className="text-white/50 mt-4 max-w-7xl mx-auto">
+            <p className="text-white/50 mt-3 max-w-7xl mx-auto">
               <span className="text-accent font-mono text-xs">
                 {'// '}
               </span>

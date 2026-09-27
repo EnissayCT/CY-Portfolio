@@ -6,17 +6,17 @@ export default {
     extend: {
       colors: {
         navy: {
-          900: '#001524',
-          800: '#0a2540',
-          700: '#09203a',
-          600: '#0d2f50',
-          500: '#1a3a5c',
+          900: '#0a1628',
+          800: '#0d2137',
+          700: '#112b45',
+          600: '#153654',
+          500: '#1c4566',
         },
         accent: {
-          DEFAULT: '#12d640',
-          light: '#2aff5a',
-          dark: '#0eb535',
-          glow: 'rgba(18, 214, 64, 0.3)',
+          DEFAULT: '#4fc3f7',
+          light: '#81d4fa',
+          dark: '#0395d6',
+          glow: 'rgba(79, 195, 247, 0.3)',
         },
       },
       fontFamily: {
@@ -40,8 +40,8 @@ export default {
           '50%': { transform: 'translateY(-20px)' },
         },
         pulseGlow: {
-          '0%, 100%': { boxShadow: '0 0 5px rgba(18, 214, 64, 0.3)' },
-          '50%': { boxShadow: '0 0 20px rgba(18, 214, 64, 0.6)' },
+          '0%, 100%': { boxShadow: '0 0 5px rgba(79, 195, 247, 0.3)' },
+          '50%': { boxShadow: '0 0 20px rgba(79, 195, 247, 0.6)' },
         },
         grain: {
           '0%, 100%': { transform: 'translate(0, 0)' },

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { education } from '../../data/education'
@@ -9,26 +9,36 @@ gsap.registerPlugin(ScrollTrigger)
 export default function Education() {
   const sectionRef = useRef<HTMLElement>(null)
   const lineRef = useRef<HTMLDivElement>(null)
+  const timelineRef = useRef<HTMLDivElement>(null)
+
+  // Use a direct scroll-driven approach for the timeline line
+  const updateLine = useCallback(() => {
+    if (!lineRef.current || !timelineRef.current) return
+    const rect = timelineRef.current.getBoundingClientRect()
+    const viewportH = window.innerHeight
+    // How far the viewport center has traveled through the timeline container
+    const progress = (viewportH * 0.6 - rect.top) / rect.height
+    const clamped = Math.max(0, Math.min(1, progress))
+    lineRef.current.style.transform = `scaleY(${clamped})`
+  }, [])
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Draw the timeline line
-      if (lineRef.current) {
-        gsap.fromTo(
-          lineRef.current,
-          { scaleY: 0 },
-          {
-            scaleY: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 60%',
-              end: 'bottom 80%',
-              scrub: 1,
-            },
+      // Section entry — fade in
+      gsap.fromTo(
+        sectionRef.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 90%',
           },
-        )
-      }
+        },
+      )
 
       // Animate cards
       gsap.fromTo(
@@ -48,8 +58,19 @@ export default function Education() {
       )
     }, sectionRef)
 
-    return () => ctx.revert()
-  }, [])
+    // Drive timeline line via rAF scroll listener for reliability with Lenis
+    const onScroll = () => updateLine()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    // Also hook into Lenis via gsap ticker
+    gsap.ticker.add(updateLine)
+    updateLine()
+
+    return () => {
+      ctx.revert()
+      window.removeEventListener('scroll', onScroll)
+      gsap.ticker.remove(updateLine)
+    }
+  }, [updateLine])
 
   return (
     <section
@@ -68,11 +89,12 @@ export default function Education() {
         </div>
 
         {/* Timeline */}
-        <div className="relative">
+        <div ref={timelineRef} className="relative">
           {/* Vertical line */}
           <div
             ref={lineRef}
             className="hidden md:block absolute left-1/2 top-0 w-px h-full bg-accent/30 -translate-x-1/2 origin-top"
+            style={{ transform: 'scaleY(0)' }}
           />
 
           <div className="space-y-12">

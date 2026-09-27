@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence } from 'framer-motion'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -25,6 +26,23 @@ export default function Projects() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Section entry — fade in
+      gsap.fromTo(
+        sectionRef.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power2.out',
+          clearProps: 'transform',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 90%',
+          },
+        },
+      )
+
       gsap.fromTo(
         '.project-card',
         { y: 40, opacity: 0 },
@@ -49,11 +67,35 @@ export default function Projects() {
   useEffect(() => {
     if (selectedProject) {
       document.body.style.overflow = 'hidden'
+      document.body.style.overscrollBehavior = 'none'
+      document.documentElement.style.overflow = 'hidden'
+      document.documentElement.style.overscrollBehavior = 'none'
+      window.dispatchEvent(
+        new CustomEvent('portfolio:scroll-lock', {
+          detail: { locked: true },
+        }),
+      )
     } else {
       document.body.style.overflow = ''
+      document.body.style.overscrollBehavior = ''
+      document.documentElement.style.overflow = ''
+      document.documentElement.style.overscrollBehavior = ''
+      window.dispatchEvent(
+        new CustomEvent('portfolio:scroll-lock', {
+          detail: { locked: false },
+        }),
+      )
     }
     return () => {
       document.body.style.overflow = ''
+      document.body.style.overscrollBehavior = ''
+      document.documentElement.style.overflow = ''
+      document.documentElement.style.overscrollBehavior = ''
+      window.dispatchEvent(
+        new CustomEvent('portfolio:scroll-lock', {
+          detail: { locked: false },
+        }),
+      )
     }
   }, [selectedProject])
 
@@ -74,22 +116,19 @@ export default function Projects() {
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex items-center gap-1 mb-12 overflow-x-auto pb-2">
+        <div className="flex items-center gap-2 mb-12 overflow-x-auto pb-2">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`relative px-4 py-2 text-sm font-mono transition-colors ${
+              className={`relative px-5 py-2.5 text-sm font-mono rounded-lg transition-all duration-300 ${
                 activeCategory === cat
-                  ? 'text-accent'
-                  : 'text-white/50 hover:text-white/80'
+                  ? 'text-accent bg-accent/10 border border-accent/20'
+                  : 'text-white/50 hover:text-white/80 border border-transparent hover:border-white/10'
               }`}
               data-cursor-hover
             >
               {cat}
-              {activeCategory === cat && (
-                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-accent" />
-              )}
             </button>
           ))}
         </div>
@@ -106,15 +145,18 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* Project Modal */}
-      <AnimatePresence>
-        {selectedProject && (
-          <ProjectModal
-            project={selectedProject}
-            onClose={() => setSelectedProject(null)}
-          />
-        )}
-      </AnimatePresence>
+      {/* Project Modal — portaled to body so parent transforms don't break fixed positioning */}
+      {createPortal(
+        <AnimatePresence>
+          {selectedProject && (
+            <ProjectModal
+              project={selectedProject}
+              onClose={() => setSelectedProject(null)}
+            />
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
     </section>
   )
 }
